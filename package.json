@@ -10,6 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/AlexanderAMalinov/TestWork.git"
   },
+  "type": "module",
   "author": "Alexander Malinov",
   "license": "ISC",
   "bugs": {
@@ -24,5 +25,9 @@
     "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "onchange": "^7.0.2"
   }
 }
