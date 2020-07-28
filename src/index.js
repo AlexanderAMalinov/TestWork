@@ -22,8 +22,41 @@ const app = () => {
     }
   };
 
+  const handlers = {
+    changeInputMode: (e) => {
+      e.preventDefault();
+      state.inputMode = true;
+    },
+    submit: (e) => {
+      e.preventDefault();
+      state.dataSet.unshift(state.inputState);
+      state.inputMode = false;
+    },
+    input: (e) => {
+      const fieldName = e.target.name;
+      const data = new FormData(e.currentTarget).get(fieldName);
+      switch (fieldName) {
+        case 'id':
+          state.inputState.id = data;
+          break;
+        case 'firstName':
+          state.inputState.firstName = data;
+          break;
+        case 'lastName':
+          state.inputState.lastName = data;
+          break;
+        case 'email':
+          state.inputState.email = data;
+          break;
+        case 'phone':
+          state.inputState.phone = data;
+      }
+    },
+  };
+
   const renderRows = (data) => {
     const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = '';
     data.forEach((person) => {
       const row = document.createElement('tr');
       tableBody.append(row);
@@ -40,40 +73,26 @@ const app = () => {
   };
   const renderInput = () => {
     const form = document.querySelector('form');
+  
     if (state.inputMode) {
       form.innerHTML = content.inputForm;
+      form.removeEventListener('submit', handlers.changeInputMode);
       const button = form.querySelector('button');
-      button.setAttribute('disabled', '');
-      form.removeEventListener('submit', handleForm);
-      form.addEventListener('input', (e) => {
-        const fieldName = e.target.name;
-        const data = new FormData(e.currentTarget).get(fieldName);
-        switch (fieldName) {
-          case 'id':
-            state.inputState.id = data;
-            break;
-          case 'firstName':
-            state.inputState.firstName = data;
-            break;
-          case 'lastName':
-            state.inputState.lastName = data;
-            break;
-          case 'email':
-            state.inputState.email = data;
-            break;
-          case 'phone':
-            state.inputState.phone = data;
-        }
-      });
+      
+      form.addEventListener('input', handlers.input);
+      form.addEventListener('submit', handlers.submit);
       return;
     }
     else {
-
+      form.innerHTML = content.addButton;
+      form.removeEventListener('submit', handlers.submit);
+      form.removeEventListener('input', handlers.input);
+      form.addEventListener('submit', handlers.changeInputMode);
     }
   };
 
 
-  watch(state, 'inputMode', () => renderInput())
+  watch(state, 'inputMode', () => renderInput());
   watch(state, 'dataSet', () => renderRows(state.dataSet));
 
 
@@ -95,14 +114,14 @@ const app = () => {
   getData(userChoose);
 
   const form = document.querySelector('form');
-  const handleForm = (e) => {
-    e.preventDefault();
-    state.inputMode = true;
-  };
-  form.addEventListener('submit', handleForm);
+
+  form.addEventListener('submit', handlers.changeInputMode);
 
 
-  
 };
+
+
+
+
 
 app();
