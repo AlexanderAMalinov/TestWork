@@ -19,7 +19,8 @@ const app = () => {
       lastName: '',
       email: '',
       phone: '',
-    }
+    },
+    filteredTable: [],
   };
 
   const handlers = {
@@ -65,7 +66,6 @@ const app = () => {
           allFieldsFull = false;
         }
       });
-      console.log('hhaah')
       const button = e.currentTarget.querySelector('button');
       if (allFieldsFull) {
         button.removeAttribute('disabled');
@@ -116,7 +116,7 @@ const app = () => {
 
   watch(state, 'inputMode', () => renderInput());
   watch(state, 'dataSet', () => renderRows(state.dataSet));
-
+  watch(state, 'filteredTable', () => renderRows(state.filteredTable));
 
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
@@ -136,6 +136,26 @@ const app = () => {
 
   const form = document.querySelector('form[data-role="add"]');
   form.addEventListener('submit', handlers.changeInputMode);
+
+  const filterForm = document.querySelector('form[data-role="filter"]');
+  filterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target).get('filter');
+    console.log(formData)
+    state.filteredTable = state.dataSet.filter((person) => {
+      const keys = Object.keys(person);
+      console.log(keys);
+      for (const key of keys) {
+        if (key === 'address') {
+          break;
+        }
+        if (String(person[key]).includes(formData)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
 };
 
 
