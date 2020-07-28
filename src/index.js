@@ -1,5 +1,7 @@
 const axios = require('axios');
-const onChange = require('on-change');
+const WatchJS = require("melanke-watchjs")
+const { watch } = WatchJS;
+const content = require('./templates.js');
 
 const routes = {
   smallData: () => 'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}',
@@ -7,9 +9,17 @@ const routes = {
 };
 
 const app = () => {
-  
+
   const state = {
     dataSet: null,
+    inputMode: false,
+    inputState: {
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+    }
   };
 
   const renderRows = (data) => {
@@ -28,32 +38,71 @@ const app = () => {
       }
     });
   };
+  const renderInput = () => {
+    const form = document.querySelector('form');
+    if (state.inputMode) {
+      form.innerHTML = content.inputForm;
+      const button = form.querySelector('button');
+      button.setAttribute('disabled', '');
+      form.removeEventListener('submit', handleForm);
+      form.addEventListener('input', (e) => {
+        const fieldName = e.target.name;
+        const data = new FormData(e.currentTarget).get(fieldName);
+        switch (fieldName) {
+          case 'id':
+            state.inputState.id = data;
+            break;
+          case 'firstName':
+            state.inputState.firstName = data;
+            break;
+          case 'lastName':
+            state.inputState.lastName = data;
+            break;
+          case 'email':
+            state.inputState.email = data;
+            break;
+          case 'phone':
+            state.inputState.phone = data;
+        }
+      });
+      return;
+    }
+    else {
+
+    }
+  };
 
 
-  const watchedData = onChange(state, () => renderRows(watchedData.dataSet));
+  watch(state, 'inputMode', () => renderInput())
+  watch(state, 'dataSet', () => renderRows(state.dataSet));
+
+
+
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
     if (choose) {
       axios.get(routes.bigData())
         .then((response) => {
-          watchedData.dataSet = response.data;
+          state.dataSet = response.data;
         });
       return;
     }
     axios.get(routes.smallData())
       .then((response) => {
-        watchedData.dataSet = response.data;
+        state.dataSet = response.data;
       });
   };
   getData(userChoose);
 
+  const form = document.querySelector('form');
+  const handleForm = (e) => {
+    e.preventDefault();
+    state.inputMode = true;
+  };
+  form.addEventListener('submit', handleForm);
+
 
   
-  
-
-
-
-
 };
 
 app();
