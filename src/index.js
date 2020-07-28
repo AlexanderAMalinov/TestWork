@@ -30,26 +30,48 @@ const app = () => {
     submit: (e) => {
       e.preventDefault();
       state.dataSet.unshift(state.inputState);
+      state.inputState = {
+        id: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+      };
       state.inputMode = false;
     },
     input: (e) => {
       const fieldName = e.target.name;
-      const data = new FormData(e.currentTarget).get(fieldName);
+      const data = new FormData(e.currentTarget);
+      const fieldData = data.get(fieldName);
       switch (fieldName) {
         case 'id':
-          state.inputState.id = data;
+          state.inputState.id = fieldData;
           break;
         case 'firstName':
-          state.inputState.firstName = data;
+          state.inputState.firstName = fieldData;
           break;
         case 'lastName':
-          state.inputState.lastName = data;
+          state.inputState.lastName = fieldData;
           break;
         case 'email':
-          state.inputState.email = data;
+          state.inputState.email = fieldData;
           break;
         case 'phone':
-          state.inputState.phone = data;
+          state.inputState.phone = fieldData;
+      }
+      let allFieldsFull = true;
+      data.forEach((item) => {
+        if (item === '') {
+          allFieldsFull = false;
+        }
+      });
+      console.log('hhaah')
+      const button = e.currentTarget.querySelector('button');
+      if (allFieldsFull) {
+        button.removeAttribute('disabled');
+      }
+      else if (!allFieldsFull) {
+        button.hasAttribute('disabled') ? null : button.setAttribute('disabled', '');
       }
     },
   };
@@ -72,7 +94,7 @@ const app = () => {
     });
   };
   const renderInput = () => {
-    const form = document.querySelector('form');
+    const form = document.querySelector('form[data-role="add"]');
   
     if (state.inputMode) {
       form.innerHTML = content.inputForm;
@@ -96,7 +118,6 @@ const app = () => {
   watch(state, 'dataSet', () => renderRows(state.dataSet));
 
 
-
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
     if (choose) {
@@ -113,11 +134,8 @@ const app = () => {
   };
   getData(userChoose);
 
-  const form = document.querySelector('form');
-
+  const form = document.querySelector('form[data-role="add"]');
   form.addEventListener('submit', handlers.changeInputMode);
-
-
 };
 
 
