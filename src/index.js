@@ -119,13 +119,13 @@ const app = () => {
     container.innerHTML = '';
     const { firstName, lastName } = state.selectedPerson;
     const personAddress = state.selectedPerson.address;
-    container.innerHTML = `Выбран пользователь: <b>${firstName} ${lastName}</b>
-    <p>Описание:</p>
+    container.innerHTML = `Selected user: <b>${firstName} ${lastName}</b>
+    <p>Description:</p>
     <textarea style="width: 400px; height: 100px">${state.selectedPerson.description}</textarea>
-    <p>Адрес проживания: <b>${personAddress.streetAddress}</b></p>
-    <p>Город: <b>${personAddress.city}</b></p>
-    <p>Провинция/штат: <b>${personAddress.state}</b></p>
-    <p>Индекс: <b>${personAddress.zip}</b></p>`;
+    <p>Street address: <b>${personAddress.streetAddress}</b></p>
+    <p>City: <b>${personAddress.city}</b></p>
+    <p>State: <b>${personAddress.state}</b></p>
+    <p>Zip: <b>${personAddress.zip}</b></p>`;
   };
 
   watch(state, 'selectedPerson', () => renderDescription());
