@@ -1,5 +1,5 @@
 const axios = require('axios');
-const WatchJS = require("melanke-watchjs")
+const WatchJS = require("melanke-watchjs");
 const { watch } = WatchJS;
 const content = require('./templates.js');
 
@@ -21,6 +21,7 @@ const app = () => {
       phone: '',
     },
     filteredTable: [],
+    selectedPerson: null,
   };
 
   const handlers = {
@@ -89,6 +90,7 @@ const app = () => {
         }
         const td = document.createElement('td');
         td.textContent = person[key];
+        td.setAttribute('name', key);
         row.append(td);
       }
     });
@@ -112,8 +114,21 @@ const app = () => {
       form.addEventListener('submit', handlers.changeInputMode);
     }
   };
+  const renderDescription = () => {
+    const container = document.querySelector('div[data-role="description"]');
+    container.innerHTML = '';
+    const { firstName, lastName } = state.selectedPerson;
+    const personAddress = state.selectedPerson.address;
+    container.innerHTML = `Выбран пользователь: <b>${firstName} ${lastName}</b>
+    <p>Описание:</p>
+    <textarea style="width: 400px; height: 100px">${state.selectedPerson.description}</textarea>
+    <p>Адрес проживания: <b>${personAddress.streetAddress}</b></p>
+    <p>Город: <b>${personAddress.city}</b></p>
+    <p>Провинция/штат: <b>${personAddress.state}</b></p>
+    <p>Индекс: <b>${personAddress.zip}</b></p>`;
+  };
 
-
+  watch(state, 'selectedPerson', () => renderDescription());
   watch(state, 'inputMode', () => renderInput());
   watch(state, 'dataSet', () => renderRows(state.dataSet));
   watch(state, 'filteredTable', () => renderRows(state.filteredTable));
@@ -141,7 +156,6 @@ const app = () => {
   filterForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target).get('filter');
-    console.log(formData)
     state.filteredTable = state.dataSet.filter((person) => {
       const keys = Object.keys(person);
       console.log(keys);
@@ -155,6 +169,20 @@ const app = () => {
       }
       return false;
     });
+  });
+
+  const bodyOfTable = document.querySelector('tbody');
+  bodyOfTable.addEventListener('click', (e) => {
+    const row = e.target.closest('tr');
+    const clickedId = row.querySelector('td[name="id"]').textContent;
+    let personInfo = null;
+    state.dataSet.forEach((person) => {
+      if (String(person.id) === clickedId) {
+        personInfo = person;
+        return;
+      }
+    });
+    state.selectedPerson = personInfo;
   });
 };
 

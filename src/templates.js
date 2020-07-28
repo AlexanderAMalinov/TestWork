@@ -1,5 +1,5 @@
 const content = {
-  inputForm: `  <div>
+  inputForm: `<div>
   <div class="form-group row">
     <label for="id" class="col-sm-2 col-form-label">id</label>
     <div class="col-sm-10">
@@ -32,7 +32,7 @@ const content = {
     </div>
     <button type="submit" disabled data-role="addTable" class="btn btn-primary">Add to table</button>
 </div>`,
-  addButton: `<button type="submit" data-role="add" class="btn btn-primary">Add</button>`,
+  addButton: '<button type="submit" data-role="add" class="btn btn-primary">Add</button>',
 };
 
 module.exports = content;
