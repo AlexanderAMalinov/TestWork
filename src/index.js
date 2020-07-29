@@ -12,6 +12,7 @@ const app = () => {
 
   const state = {
     dataSet: null,
+    currentData: null,
     inputMode: false,
     inputState: {
       id: '',
@@ -20,12 +21,11 @@ const app = () => {
       email: '',
       phone: '',
     },
-    filteredTable: [],
     selectedPerson: null,
     sortOrder: {
       by: null,
       desc: false,
-    }
+    },
   };
 
   const handlers = {
@@ -131,14 +131,23 @@ const app = () => {
     <p>State: <b>${personAddress.state}</b></p>
     <p>Zip: <b>${personAddress.zip}</b></p>`;
   };
+  const renderTableHeader = () => {
+    const headerRow = document.querySelector('thead').querySelector('tr');
+    const heads = headerRow.querySelectorAll('a');
+    heads.forEach((head) => {
+      const headName = head.dataset.name;
+      head.textContent = `${headName} (unsorted)`;
+    });
+    const choisenHead = document.querySelector(`a[data-name="${state.sortOrder.by}"]`);
+    choisenHead.textContent = `${choisenHead.dataset.name} (${state.sortOrder.desc === false ? 'asc' : 'desc'})`;
+  };
 
+  // Watch for render parts of DOM, if state changes
   watch(state, 'selectedPerson', () => renderDescription());
   watch(state, 'inputMode', () => renderInput());
   watch(state, 'dataSet', () => renderRows(state.dataSet));
-  watch(state, 'filteredTable', () => renderRows(state.filteredTable));
-  watch(state, 'sortOrder', () => {
-    
-  });
+  watch(state, 'currentData', () => renderRows(state.currentData));
+  watch(state, 'sortOrder', () => renderTableHeader());
 
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
@@ -146,12 +155,14 @@ const app = () => {
       axios.get(routes.bigData())
         .then((response) => {
           state.dataSet = response.data;
+          state.currentData = response.data;
         });
       return;
     }
     axios.get(routes.smallData())
       .then((response) => {
         state.dataSet = response.data;
+        state.currentData = response.data;
       });
   };
   getData(userChoose);
@@ -163,7 +174,7 @@ const app = () => {
   filterForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target).get('filter');
-    state.filteredTable = state.dataSet.filter((person) => {
+    state.currentData = state.dataSet.filter((person) => {
       const keys = Object.keys(person);
       for (const key of keys) {
         if (key === 'address') {
@@ -202,6 +213,11 @@ const app = () => {
         desc: by === name ? !desc : false,
         by: name,
       };
+      if (!state.sortOrder.desc) {
+        state.currentData.sort((a, b) => String(a[name]).localeCompare(String(b[name]), 'en', { numeric: true }));
+        return;
+      }
+      state.currentData.sort((a, b) => String(b[name]).localeCompare(String(a[name]), 'en', { numeric: true }));
     });
   });
 
