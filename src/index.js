@@ -22,6 +22,10 @@ const app = () => {
     },
     filteredTable: [],
     selectedPerson: null,
+    sortOrder: {
+      by: null,
+      desc: false,
+    }
   };
 
   const handlers = {
@@ -132,6 +136,9 @@ const app = () => {
   watch(state, 'inputMode', () => renderInput());
   watch(state, 'dataSet', () => renderRows(state.dataSet));
   watch(state, 'filteredTable', () => renderRows(state.filteredTable));
+  watch(state, 'sortOrder', () => {
+    
+  });
 
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
@@ -158,7 +165,6 @@ const app = () => {
     const formData = new FormData(e.target).get('filter');
     state.filteredTable = state.dataSet.filter((person) => {
       const keys = Object.keys(person);
-      console.log(keys);
       for (const key of keys) {
         if (key === 'address') {
           break;
@@ -184,6 +190,21 @@ const app = () => {
     });
     state.selectedPerson = personInfo;
   });
+
+  const headOfTable = document.querySelector('thead');
+  const links = headOfTable.querySelectorAll('a');
+  links.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const name = e.target.dataset.name;
+      const { by, desc } = state.sortOrder;
+      state.sortOrder = {
+        desc: by === name ? !desc : false,
+        by: name,
+      };
+    });
+  });
+
 };
 
 
