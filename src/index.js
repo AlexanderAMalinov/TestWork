@@ -1,7 +1,8 @@
 const axios = require('axios');
-const WatchJS = require("melanke-watchjs");
-const { watch } = WatchJS;
+const WatchJS = require('melanke-watchjs');
 const content = require('./templates.js');
+
+const { watch } = WatchJS;
 
 const routes = {
   smallData: () => 'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}',
@@ -9,7 +10,6 @@ const routes = {
 };
 
 const app = () => {
-
   const state = {
     dataSet: null,
     currentData: null,
@@ -79,8 +79,7 @@ const app = () => {
       const button = e.currentTarget.querySelector('button');
       if (allFieldsFull) {
         button.removeAttribute('disabled');
-      }
-      else if (!allFieldsFull) {
+      } else if (!allFieldsFull) {
         button.hasAttribute('disabled') ? null : button.setAttribute('disabled', '');
       }
     },
@@ -90,7 +89,6 @@ const app = () => {
     const container = document.querySelector('.pagination');
     container.innerHTML = '';
     for (let start = 1; start <= state.pagination.countOfPages; start += 1) {
-      console.log(state.pagination.countOfPages)
       const li = document.createElement('li');
       li.classList.add('page-item');
       if (start === state.pagination.activePage) {
@@ -112,8 +110,8 @@ const app = () => {
     renderPagination();
     const begin = ((state.pagination.activePage - 1) * state.pagination.pageSize);
     const end = begin + state.pagination.pageSize;
-    const preparedData = data.slice(begin, end); 
-    
+    const preparedData = data.slice(begin, end);
+
     const tableBody = document.querySelector('tbody');
     tableBody.innerHTML = '';
     preparedData.forEach((person) => {
@@ -133,17 +131,13 @@ const app = () => {
   };
   const renderInput = () => {
     const form = document.querySelector('form[data-role="add"]');
-  
+
     if (state.inputMode) {
       form.innerHTML = content.inputForm;
       form.removeEventListener('submit', handlers.changeInputMode);
-      const button = form.querySelector('button');
-      
       form.addEventListener('input', handlers.input);
       form.addEventListener('submit', handlers.submit);
-      return;
-    }
-    else {
+    } else {
       form.innerHTML = content.addButton;
       form.removeEventListener('submit', handlers.submit);
       form.removeEventListener('input', handlers.input);
@@ -231,7 +225,6 @@ const app = () => {
     state.dataSet.forEach((person) => {
       if (String(person.id) === clickedId) {
         personInfo = person;
-        return;
       }
     });
     state.selectedPerson = personInfo;
@@ -242,7 +235,7 @@ const app = () => {
   links.forEach((link) => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      const name = e.target.dataset.name;
+      const { name } = e.target.dataset;
       const { by, desc } = state.sortOrder;
       state.sortOrder = {
         desc: by === name ? !desc : false,
@@ -255,11 +248,6 @@ const app = () => {
       state.currentData.sort((a, b) => String(b[name]).localeCompare(String(a[name]), 'en', { numeric: true }));
     });
   });
-
 };
-
-
-
-
 
 app();
