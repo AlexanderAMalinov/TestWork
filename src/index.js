@@ -27,8 +27,9 @@ const app = () => {
       desc: false,
     },
     pagination: {
+      activePage: 1,
       pageSize: 50,
-      
+      countOfPages: null,
     },
   };
 
@@ -85,10 +86,37 @@ const app = () => {
     },
   };
 
+  const renderPagination = () => {
+    const container = document.querySelector('.pagination');
+    container.innerHTML = '';
+    for (let start = 1; start <= state.pagination.countOfPages; start += 1) {
+      console.log(state.pagination.countOfPages)
+      const li = document.createElement('li');
+      li.classList.add('page-item');
+      if (start === state.pagination.activePage) {
+        li.classList.add('active');
+      }
+      const link = document.createElement('a');
+      link.classList.add('page-link');
+      link.setAttribute('href', '#');
+      link.textContent = String(start);
+      li.append(link);
+      container.append(li);
+      link.addEventListener('click', (e) => {
+        const numOfLink = Number(e.target.textContent);
+        state.pagination.activePage = numOfLink;
+      });
+    }
+  };
   const renderRows = (data) => {
+    renderPagination();
+    const begin = ((state.pagination.activePage - 1) * state.pagination.pageSize);
+    const end = begin + state.pagination.pageSize;
+    const preparedData = data.slice(begin, end); 
+    
     const tableBody = document.querySelector('tbody');
     tableBody.innerHTML = '';
-    data.forEach((person) => {
+    preparedData.forEach((person) => {
       const row = document.createElement('tr');
       tableBody.append(row);
       const keys = Object.keys(person);
@@ -152,6 +180,7 @@ const app = () => {
   watch(state, 'dataSet', () => renderRows(state.dataSet));
   watch(state, 'currentData', () => renderRows(state.currentData));
   watch(state, 'sortOrder', () => renderTableHeader());
+  watch(state.pagination, 'activePage', () => renderRows(state.currentData));
 
   const userChoose = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
@@ -160,6 +189,7 @@ const app = () => {
         .then((response) => {
           state.dataSet = response.data;
           state.currentData = response.data;
+          state.pagination.countOfPages = Math.ceil(response.data.length / state.pagination.pageSize);
         });
       return;
     }
@@ -167,6 +197,7 @@ const app = () => {
       .then((response) => {
         state.dataSet = response.data;
         state.currentData = response.data;
+        state.pagination.countOfPages = Math.ceil(response.data.length / state.pagination.pageSize);
       });
   };
   getData(userChoose);
