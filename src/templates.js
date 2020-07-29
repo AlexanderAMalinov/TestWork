@@ -30,9 +30,9 @@ const content = {
         <input type="text" name="phone" class="form-control" id="phone" placeholder="phone">
       </div>
     </div>
-    <button type="submit" disabled data-role="addTable" class="btn btn-primary">Add to table</button>
+    <button style="margin-bottom: 10px;" type="submit" disabled data-role="addTable" class="btn btn-primary">Add to table</button>
 </div>`,
-  addButton: '<button type="submit" data-role="add" class="btn btn-primary">Add</button>',
+  addButton: '<button style="margin-bottom: 10px; margin-top: 10px;" type="submit" data-role="add" class="btn btn-primary">Add</button>',
 };
 
 module.exports = content;

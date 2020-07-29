@@ -26,6 +26,10 @@ const app = () => {
       by: null,
       desc: false,
     },
+    pagination: {
+      pageSize: 50,
+      
+    },
   };
 
   const handlers = {

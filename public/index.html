@@ -1,42 +1,42 @@
 <!doctype html>
 <html>
-<head>
-  <title>Test table</title>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
-  <div class="container">
-  <form data-role="add">
-    <button type="submit" data-role="add" class="btn btn-primary">Add</button>
-  </form>
-  <table class="table table-sm">
-    <thead>
-      <tr>
-        <th scope="col"><a href="" data-name="id">id (unsorted)</a></th>
-        <th scope="col"><a href="" data-name="firstName">firstName (unsorted)</a></th>
-        <th scope="col"><a href="" data-name="lastName">lastName (unsorted)</a></th>
-        <th scope="col"><a href="" data-name="email">email (unsorted)</a></th>
-        <th scope="col"><a href="" data-name="phone">phone (unsorted)</a></th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <form data-role="filter">
-    <div class="form-row align-items-center">
-      <div class="col-11">
-        <label class="sr-only" for="inlineFormInput"></label>
-        <input type="text" name="filter" class="form-control mb-2" id="inlineFormInput" placeholder="Type here">
+  <head>
+    <title>Test table</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <form data-role="add">
+        <button style="margin-bottom: 10px; margin-top: 10px;" type="submit" data-role="add" class="btn btn-primary">Add</button>
+      </form>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th scope="col"><a href="" data-name="id">id (unsorted)</a></th>
+          <th scope="col"><a href="" data-name="firstName">firstName (unsorted)</a></th>
+          <th scope="col"><a href="" data-name="lastName">lastName (unsorted)</a></th>
+          <th scope="col"><a href="" data-name="email">email (unsorted)</a></th>
+          <th scope="col"><a href="" data-name="phone">phone (unsorted)</a></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <form data-role="filter">
+      <div style="margin-bottom: 50px;" class="form-row align-items-center">
+        <div class="col-10">
+          <label class="sr-only" for="inlineFormInput"></label>
+          <input type="text" name="filter" class="form-control mb-2" id="inlineFormInput" placeholder="Type here">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary mb-2">search</button>
+        </div>
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-2">search</button>
-      </div>
+    </form>
+    <div data-role="description">
     </div>
-  </form>
-  <div data-role="description">
-  </div>
-  </div>
-  <script type="text/javascript" src="bundle.js"></script>
-</body>
+    </div>
+    <script type="text/javascript" src="bundle.js"></script>
+  </body>
 </html>
