@@ -192,6 +192,10 @@ const app = () => {
           state.dataSet = response.data;
           state.currentData = response.data;
           renderHidePreloader();
+        })
+        .catch((e) => {
+          alert(e);
+          setTimeout(() => getData(), 10000);
         });
       return;
     }
@@ -200,6 +204,10 @@ const app = () => {
         state.dataSet = response.data;
         state.currentData = response.data;
         renderHidePreloader();
+      })
+      .catch((e) => {
+        alert(e);
+        setTimeout(() => getData(), 10000);
       });
   };
   getData(userChoise);
