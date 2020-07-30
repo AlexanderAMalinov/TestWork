@@ -168,6 +168,10 @@ const app = () => {
     const choisenHead = document.querySelector(`a[data-name="${state.sortOrder.by}"]`);
     choisenHead.textContent = `${choisenHead.dataset.name} (${state.sortOrder.desc === false ? 'asc' : 'desc'})`;
   };
+  const renderHidePreloader = () => {
+    const preloader = document.querySelector('#preload');
+    preloader.setAttribute('style', 'display: none;')
+  };
 
   // Watch for render parts of DOM, if state changes
   watch(state, 'selectedPerson', () => renderDescription());
@@ -184,6 +188,7 @@ const app = () => {
         .then((response) => {
           state.dataSet = response.data;
           state.currentData = response.data;
+          renderHidePreloader();
         });
       return;
     }
@@ -191,6 +196,7 @@ const app = () => {
       .then((response) => {
         state.dataSet = response.data;
         state.currentData = response.data;
+        renderHidePreloader();
       });
   };
   getData(userChoise);
