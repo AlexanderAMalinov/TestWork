@@ -69,6 +69,9 @@ const app = () => {
           break;
         case 'phone':
           state.inputState.phone = fieldData;
+          break;
+        default:
+          throw new Error('Unexpected field name');
       }
       let allFieldsFull = true;
       data.forEach((item) => {
@@ -170,7 +173,7 @@ const app = () => {
   };
   const renderHidePreloader = () => {
     const preloader = document.querySelector('#preload');
-    preloader.setAttribute('style', 'display: none;')
+    preloader.setAttribute('style', 'display: none;');
   };
 
   // Watch for render parts of DOM, if state changes
