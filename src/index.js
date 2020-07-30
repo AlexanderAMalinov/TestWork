@@ -88,6 +88,7 @@ const app = () => {
   const renderPagination = () => {
     const container = document.querySelector('.pagination');
     container.innerHTML = '';
+    state.pagination.countOfPages = Math.ceil(state.currentData.length / state.pagination.pageSize);
     for (let start = 1; start <= state.pagination.countOfPages; start += 1) {
       const li = document.createElement('li');
       li.classList.add('page-item');
@@ -176,14 +177,13 @@ const app = () => {
   watch(state, 'sortOrder', () => renderTableHeader());
   watch(state.pagination, 'activePage', () => renderRows(state.currentData));
 
-  const userChoose = confirm('Do you want see all data? If no - press "cancel"');
+  const userChoise = confirm('Do you want see all data? If no - press "cancel"');
   const getData = (choose) => {
     if (choose) {
       axios.get(routes.bigData())
         .then((response) => {
           state.dataSet = response.data;
           state.currentData = response.data;
-          state.pagination.countOfPages = Math.ceil(response.data.length / state.pagination.pageSize);
         });
       return;
     }
@@ -191,10 +191,9 @@ const app = () => {
       .then((response) => {
         state.dataSet = response.data;
         state.currentData = response.data;
-        state.pagination.countOfPages = Math.ceil(response.data.length / state.pagination.pageSize);
       });
   };
-  getData(userChoose);
+  getData(userChoise);
 
   const form = document.querySelector('form[data-role="add"]');
   form.addEventListener('submit', handlers.changeInputMode);
